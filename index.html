@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An interactive Medical Explainer</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+</style>
+</head>
+
+
+<body>
+
+  <canvas
+  style="
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+  "
+  id="rive-canvas"
+></canvas>
+
+
+<script src="https://unpkg.com/@rive-app/webgl2"></script>
+<script>
+// The layout of the graphic will adhere to
+    const layout = new rive.Layout({
+      fit: rive.Fit.Layout,
+      layoutScaleFactor: 1, // when using `Fit.Layout`. This allows you to resize the layout as needed.
+    });
+
+    // ---------------------------------
+    // HTML Canvas element to render to
+    const riveCanvas = document.getElementById("rive-canvas");
+
+    function computeSize() {
+      riveInstance.resizeDrawingSurfaceToCanvas();
+    }
+
+    // Subscribe to window size changes and update call `resizeDrawingSurfaceToCanvas`
+    window.onresize = computeSize;
+
+    // Subscribe to devicePixelRatio changes and call `resizeDrawingSurfaceToCanvas`
+    window
+      .matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`)
+      .addEventListener("change", computeSize);
+
+
+    const riveInstance = new rive.Rive({
+      src: "jumo_interactive.riv",
+      // Be sure to specify the correct state machine (or animation) name
+      stateMachines: "State Machine 1", // Name of the State Machine to play
+      canvas: riveCanvas,
+      artboard: "Intro",
+      layout: layout, // This is optional. Provides additional layout control.
+      autoplay: true,
+      autoBind: true,
+      onLoad: () => {
+        // Prevent a blurry canvas by using the device pixel ratio
+        riveInstance.resizeDrawingSurfaceToCanvas();
+      },
+    });
+
+</script>
+</body>
+</html>
